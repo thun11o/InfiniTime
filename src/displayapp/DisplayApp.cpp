@@ -266,11 +266,12 @@ void DisplayApp::Refresh() {
         }
         if (currentApp == Apps::Timer) {
           lv_disp_trig_activity(nullptr);
-          auto* timer = static_cast<Screens::Timer*>(currentScreen.get());
-          timer->Reset();
         } else {
           LoadNewScreen(Apps::Timer, DisplayApp::FullRefreshDirections::Up);
         }
+        Screens::Timer* timer;
+        timer = static_cast<Screens::Timer*>(currentScreen.get());
+        timer->Stop();
         motorController.StartRinging();
         break;
       case Messages::AlarmTriggered:
