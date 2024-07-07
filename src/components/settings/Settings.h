@@ -283,6 +283,14 @@ namespace Pinetime {
         return bleRadioEnabled;
       };
 
+      void SetShouldRestoreBleRadioEnabled(bool shouldRestore) {
+        shouldRestoreBleRadioEnabled = shouldRestore;
+      };
+
+      bool GetShouldRestoreBleRadioEnabled() const {
+        return shouldRestoreBleRadioEnabled;
+      };
+
     private:
       Pinetime::Controllers::FS& fs;
 
@@ -320,6 +328,7 @@ namespace Pinetime {
        * to off (false) on every boot because we always want ble to be enabled on startup
        */
       bool bleRadioEnabled = true;
+      bool shouldRestoreBleRadioEnabled = false;
 
       void LoadSettingsFromFile();
       void SaveSettingsToFile();
