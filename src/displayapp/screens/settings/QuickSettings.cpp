@@ -10,8 +10,10 @@ using namespace Pinetime::Applications::Screens;
 namespace {
   void ButtonEventHandler(lv_obj_t* obj, lv_event_t event) {
     auto* screen = static_cast<QuickSettings*>(obj->user_data);
-    if (event == LV_EVENT_CLICKED) {
-      screen->OnButtonEvent(obj);
+    if (event == LV_EVENT_SHORT_CLICKED) {
+      screen->OnButtonEvent(obj, false);
+    } else if (event == LV_EVENT_LONG_PRESSED) {
+      screen->OnButtonEvent(obj, true);
     }
   }
 
@@ -135,7 +137,7 @@ void QuickSettings::UpdateScreen() {
   statusIcons.Update();
 }
 
-void QuickSettings::OnButtonEvent(lv_obj_t* object) {
+void QuickSettings::OnButtonEvent(lv_obj_t* object, bool was_long_pressed) {
   if (object == btn2) {
     app->StartApp(Apps::FlashLight, DisplayApp::FullRefreshDirections::Up);
   } else if (object == btn1) {
@@ -146,19 +148,42 @@ void QuickSettings::OnButtonEvent(lv_obj_t* object) {
 
   } else if (object == btn3) {
 
-    if (settingsController.GetNotificationStatus() == Controllers::Settings::Notification::On) {
-      settingsController.SetNotificationStatus(Controllers::Settings::Notification::Off);
-      lv_label_set_text_static(btn3_lvl, Symbols::notificationsOff);
-      lv_obj_set_state(btn3, static_cast<lv_state_t>(ButtonState::NotificationsOff));
-    } else if (settingsController.GetNotificationStatus() == Controllers::Settings::Notification::Off) {
+    const auto wasBleRadioEnabled = settingsController.GetBleRadioEnabled();
+    if (was_long_pressed && settingsController.GetNotificationStatus() != Controllers::Settings::Notification::Sleep) {
+      if (settingsController.GetBleRadioEnabled()) {
+        settingsController.SetShouldRestoreBleRadioEnabled(true);
+        settingsController.SetBleRadioEnabled(false);
+      }
       settingsController.SetNotificationStatus(Controllers::Settings::Notification::Sleep);
       lv_label_set_text_static(btn3_lvl, Symbols::sleep);
       lv_obj_set_state(btn3, static_cast<lv_state_t>(ButtonState::Sleep));
     } else {
-      settingsController.SetNotificationStatus(Controllers::Settings::Notification::On);
-      lv_label_set_text_static(btn3_lvl, Symbols::notificationsOn);
-      lv_obj_set_state(btn3, static_cast<lv_state_t>(ButtonState::NotificationsOn));
-      motorController.RunForDuration(35);
+      switch (settingsController.GetNotificationStatus()) {
+        case Controllers::Settings::Notification::On: {
+          settingsController.SetNotificationStatus(Controllers::Settings::Notification::Off);
+          lv_label_set_text_static(btn3_lvl, Symbols::notificationsOff);
+          lv_obj_set_state(btn3, static_cast<lv_state_t>(ButtonState::NotificationsOff));
+          break;
+        }
+        case Controllers::Settings::Notification::Sleep: {
+          if (settingsController.GetShouldRestoreBleRadioEnabled()) {
+            settingsController.SetShouldRestoreBleRadioEnabled(false);
+            settingsController.SetBleRadioEnabled(true);
+          }
+          [[fallthrough]];
+        }
+        case Controllers::Settings::Notification::Off: {
+          settingsController.SetNotificationStatus(Controllers::Settings::Notification::On);
+          lv_label_set_text_static(btn3_lvl, Symbols::notificationsOn);
+          lv_obj_set_state(btn3, static_cast<lv_state_t>(ButtonState::NotificationsOn));
+          motorController.RunForDuration(35);
+          break;
+        }
+      }
+    }
+
+    if (wasBleRadioEnabled != settingsController.GetBleRadioEnabled()) {
+      this->app->PushMessage(Pinetime::Applications::Display::Messages::BleRadioEnableToggle);
     }
 
   } else if (object == btn4) {

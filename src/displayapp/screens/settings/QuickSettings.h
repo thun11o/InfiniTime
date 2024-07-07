@@ -27,7 +27,7 @@ namespace Pinetime {
 
         ~QuickSettings() override;
 
-        void OnButtonEvent(lv_obj_t* object);
+        void OnButtonEvent(lv_obj_t* object, bool was_long_pressed);
 
         void UpdateScreen();
 
