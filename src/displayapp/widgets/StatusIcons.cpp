@@ -40,7 +40,11 @@ void StatusIcons::Update() {
   bleState = bleController.IsConnected();
   bleRadioEnabled = bleController.IsRadioEnabled();
   if (bleState.IsUpdated() || bleRadioEnabled.IsUpdated()) {
-    lv_obj_set_hidden(bleIcon, !bleState.Get());
+    lv_obj_set_hidden(bleIcon, !bleRadioEnabled.Get());
+    lv_obj_set_style_local_text_color(bleIcon,
+                                      LV_LABEL_PART_MAIN,
+                                      LV_STATE_DEFAULT,
+                                      bleState.Get() ? lv_color_hex(0xFFFFFF) : lv_color_hex(0x1B1B1B));
   }
 
   lv_obj_realign(container);
