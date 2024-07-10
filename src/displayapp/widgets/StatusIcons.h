@@ -9,11 +9,16 @@
 #include "utility/DirtyValue.h"
 
 namespace Pinetime {
+  namespace Controllers {
+    class AlarmController;
+  }
   namespace Applications {
     namespace Widgets {
       class StatusIcons {
       public:
-        StatusIcons(const Controllers::Battery& batteryController, const Controllers::Ble& bleController);
+        StatusIcons(const Controllers::Battery& batteryController,
+                    const Controllers::Ble& bleController,
+                    const Controllers::AlarmController& alarmController);
         void Align();
         void Create();
 
@@ -27,12 +32,15 @@ namespace Pinetime {
         Screens::BatteryIcon batteryIcon;
         const Pinetime::Controllers::Battery& batteryController;
         const Controllers::Ble& bleController;
+        const Controllers::AlarmController& alarmController;
 
         Utility::DirtyValue<uint8_t> batteryPercentRemaining {};
         Utility::DirtyValue<bool> powerPresent {};
         Utility::DirtyValue<bool> bleState {};
         Utility::DirtyValue<bool> bleRadioEnabled {};
+        Utility::DirtyValue<bool> alarmActive {};
 
+        lv_obj_t* alarmIcon;
         lv_obj_t* bleIcon;
         lv_obj_t* batteryPlug;
         lv_obj_t* container;

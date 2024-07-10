@@ -12,6 +12,9 @@
 #include "displayapp/widgets/StatusIcons.h"
 
 namespace Pinetime {
+  namespace Controllers {
+    class AlarmController;
+  }
   namespace Applications {
     namespace Screens {
       class Tile : public Screen {
@@ -28,6 +31,7 @@ namespace Pinetime {
                       Controllers::Settings& settingsController,
                       const Controllers::Battery& batteryController,
                       const Controllers::Ble& bleController,
+                      const Controllers::AlarmController& alarmController,
                       Controllers::DateTime& dateTimeController,
                       std::array<Applications, 6>& applications);
 

@@ -12,6 +12,9 @@
 
 namespace Pinetime {
 
+  namespace Controllers {
+    class AlarmController;
+  }
   namespace Applications {
     namespace Screens {
 
@@ -23,7 +26,8 @@ namespace Pinetime {
                       Controllers::BrightnessController& brightness,
                       Controllers::MotorController& motorController,
                       Pinetime::Controllers::Settings& settingsController,
-                      const Controllers::Ble& bleController);
+                      const Controllers::Ble& bleController,
+                      const Controllers::AlarmController& alarmController);
 
         ~QuickSettings() override;
 
@@ -37,6 +41,7 @@ namespace Pinetime {
         Controllers::BrightnessController& brightness;
         Controllers::MotorController& motorController;
         Controllers::Settings& settingsController;
+        const Controllers::AlarmController& alarmController;
 
         lv_task_t* taskUpdate;
         lv_obj_t* label_time;

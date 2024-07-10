@@ -14,6 +14,7 @@
 
 namespace Pinetime {
   namespace Controllers {
+    class AlarmController;
     class Settings;
     class Battery;
     class Ble;
@@ -34,6 +35,7 @@ namespace Pinetime {
                          Controllers::Settings& settingsController,
                          Controllers::HeartRateController& heartRateController,
                          Controllers::MotionController& motionController,
+                         const Controllers::AlarmController& controller,
                          Controllers::SimpleWeatherService& weather);
         ~WatchFaceDigital() override;
 
@@ -68,6 +70,7 @@ namespace Pinetime {
         Controllers::Settings& settingsController;
         Controllers::HeartRateController& heartRateController;
         Controllers::MotionController& motionController;
+        const Controllers::AlarmController& alarmController;
         Controllers::SimpleWeatherService& weatherService;
 
         lv_task_t* taskRefresh;
@@ -88,6 +91,7 @@ namespace Pinetime {
                                              controllers.settingsController,
                                              controllers.heartRateController,
                                              controllers.motionController,
+                                             controllers.alarmController,
                                              *controllers.weatherController);
       };
 
