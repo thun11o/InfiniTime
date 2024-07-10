@@ -3,6 +3,7 @@
 #include <lvgl/lvgl.h>
 #include <functional>
 #include <algorithm>
+#include "components/alarm/AlarmController.h"
 #include "components/settings/Settings.h"
 
 using namespace Pinetime::Applications::Screens;
@@ -22,6 +23,7 @@ ApplicationList::ApplicationList(DisplayApp* app,
                                  const Pinetime::Controllers::Battery& batteryController,
                                  const Pinetime::Controllers::Ble& bleController,
                                  Controllers::DateTime& dateTimeController,
+                                 const Controllers::AlarmController& alarmController,
                                  Pinetime::Controllers::FS& filesystem,
                                  std::array<Tile::Applications, UserAppTypes::Count>&& apps)
   : app {app},
@@ -29,6 +31,7 @@ ApplicationList::ApplicationList(DisplayApp* app,
     batteryController {batteryController},
     bleController {bleController},
     dateTimeController {dateTimeController},
+    alarmController {alarmController},
     filesystem {filesystem},
     apps {std::move(apps)},
     screens {app, settingsController.GetAppMenu(), CreateScreenList(), Screens::ScreenListModes::UpDown} {
@@ -59,6 +62,7 @@ std::unique_ptr<Screen> ApplicationList::CreateScreen(unsigned int screenNum) co
                                          settingsController,
                                          batteryController,
                                          bleController,
+                                         alarmController,
                                          dateTimeController,
                                          pageApps);
 }

@@ -5,6 +5,7 @@
 #include "displayapp/screens/NotificationIcon.h"
 #include "displayapp/screens/Symbols.h"
 #include "displayapp/screens/WeatherSymbols.h"
+#include "components/alarm/AlarmController.h"
 #include "components/battery/BatteryController.h"
 #include "components/ble/BleController.h"
 #include "components/ble/NotificationManager.h"
@@ -22,6 +23,7 @@ WatchFaceDigital::WatchFaceDigital(Controllers::DateTime& dateTimeController,
                                    Controllers::Settings& settingsController,
                                    Controllers::HeartRateController& heartRateController,
                                    Controllers::MotionController& motionController,
+                                   const Controllers::AlarmController& alarmController,
                                    Controllers::SimpleWeatherService& weatherService)
   : currentDateTime {{}},
     dateTimeController {dateTimeController},
@@ -29,9 +31,10 @@ WatchFaceDigital::WatchFaceDigital(Controllers::DateTime& dateTimeController,
     settingsController {settingsController},
     heartRateController {heartRateController},
     motionController {motionController},
+    alarmController {alarmController},
     weatherService {weatherService},
-    statusIcons(batteryController, bleController) {
 
+    statusIcons(batteryController, bleController, alarmController) {
   statusIcons.Create();
 
   notificationIcon = lv_label_create(lv_scr_act(), nullptr);

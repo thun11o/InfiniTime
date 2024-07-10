@@ -10,6 +10,9 @@
 #include "Tile.h"
 
 namespace Pinetime {
+  namespace Controller {
+    class AlarmController;
+  }
   namespace Applications {
     namespace Screens {
       class ApplicationList : public Screen {
@@ -19,6 +22,7 @@ namespace Pinetime {
                                  const Pinetime::Controllers::Battery& batteryController,
                                  const Pinetime::Controllers::Ble& bleController,
                                  Controllers::DateTime& dateTimeController,
+                                 const Controllers::AlarmController& alarmController,
                                  Pinetime::Controllers::FS& filesystem,
                                  std::array<Tile::Applications, UserAppTypes::Count>&& apps);
         ~ApplicationList() override;
@@ -33,6 +37,7 @@ namespace Pinetime {
         const Pinetime::Controllers::Battery& batteryController;
         const Pinetime::Controllers::Ble& bleController;
         Controllers::DateTime& dateTimeController;
+        const Controllers::AlarmController& alarmController;
         Pinetime::Controllers::FS& filesystem;
         std::array<Tile::Applications, UserAppTypes::Count> apps;
 
