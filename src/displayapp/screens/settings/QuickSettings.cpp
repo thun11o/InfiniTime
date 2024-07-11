@@ -154,6 +154,13 @@ void QuickSettings::OnButtonEvent(lv_obj_t* object, bool was_long_pressed) {
         settingsController.SetShouldRestoreBleRadioEnabled(true);
         settingsController.SetBleRadioEnabled(false);
       }
+
+      const auto currentBrightness = settingsController.GetBrightness();
+      brightness.Set(Controllers::BrightnessController::Levels::Low);
+      lv_label_set_text_static(btn1_lvl, brightness.GetIcon());
+      settingsController.SetBrightness(Controllers::BrightnessController::Levels::Low);
+      settingsController.SetBrightnessToRestoreAfterSleep(currentBrightness);
+
       settingsController.SetNotificationStatus(Controllers::Settings::Notification::Sleep);
       lv_label_set_text_static(btn3_lvl, Symbols::sleep);
       lv_obj_set_state(btn3, static_cast<lv_state_t>(ButtonState::Sleep));
@@ -169,6 +176,12 @@ void QuickSettings::OnButtonEvent(lv_obj_t* object, bool was_long_pressed) {
           if (settingsController.GetShouldRestoreBleRadioEnabled()) {
             settingsController.SetShouldRestoreBleRadioEnabled(false);
             settingsController.SetBleRadioEnabled(true);
+          }
+
+          if (const auto brightnessToRestore = settingsController.GetBrightnessToRestoreAfterSleep()) {
+            brightness.Set(*brightnessToRestore);
+            lv_label_set_text_static(btn1_lvl, brightness.GetIcon());
+            settingsController.SetBrightness(*brightnessToRestore);
           }
           [[fallthrough]];
         }

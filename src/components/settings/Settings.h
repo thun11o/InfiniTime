@@ -5,6 +5,8 @@
 #include "components/fs/FS.h"
 #include "displayapp/apps/Apps.h"
 
+#include <optional>
+
 namespace Pinetime {
   namespace Controllers {
     class Settings {
@@ -254,6 +256,8 @@ namespace Pinetime {
       }
 
       void SetBrightness(Controllers::BrightnessController::Levels level) {
+        brightnessToRestoreAfterSleep = std::nullopt;
+
         if (level != settings.brightLevel) {
           settingsChanged = true;
         }
@@ -262,6 +266,14 @@ namespace Pinetime {
 
       Controllers::BrightnessController::Levels GetBrightness() const {
         return settings.brightLevel;
+      };
+
+      void SetBrightnessToRestoreAfterSleep(Controllers::BrightnessController::Levels level) {
+        brightnessToRestoreAfterSleep = level;
+      };
+
+      std::optional<Controllers::BrightnessController::Levels> GetBrightnessToRestoreAfterSleep() const {
+        return brightnessToRestoreAfterSleep;
       };
 
       void SetStepsGoal(uint32_t goal) {
@@ -317,6 +329,8 @@ namespace Pinetime {
 
         Controllers::BrightnessController::Levels brightLevel = Controllers::BrightnessController::Levels::Medium;
       };
+
+      std::optional<Controllers::BrightnessController::Levels> brightnessToRestoreAfterSleep;
 
       SettingsData settings;
       bool settingsChanged = false;
