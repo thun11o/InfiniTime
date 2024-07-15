@@ -15,7 +15,7 @@ namespace {
 }
 
 FlashLight::FlashLight(System::SystemTask& systemTask, Controllers::BrightnessController& brightnessController)
-  : systemTask {systemTask}, brightnessController {brightnessController} {
+  : systemTask {systemTask}, brightnessController {brightnessController}, brightnessToRestore {brightnessController.Level()} {
 
   brightnessController.Set(Controllers::BrightnessController::Levels::Low);
 
@@ -53,6 +53,7 @@ FlashLight::~FlashLight() {
   lv_obj_clean(lv_scr_act());
   lv_obj_set_style_local_bg_color(lv_scr_act(), LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, LV_COLOR_BLACK);
   systemTask.PushMessage(Pinetime::System::Messages::EnableSleeping);
+  brightnessController.Set(brightnessToRestore);
 }
 
 void FlashLight::SetColors() {

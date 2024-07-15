@@ -32,6 +32,7 @@ namespace Pinetime {
         lv_obj_t* backgroundAction;
         lv_obj_t* indicators[3];
         bool isOn = false;
+        Controllers::BrightnessController::Levels brightnessToRestore;
       };
     }
   }
