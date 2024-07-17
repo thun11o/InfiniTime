@@ -36,6 +36,7 @@ namespace Pinetime {
       };
       enum class PTSGaugeStyle : uint8_t { Full, Half, Numeric };
       enum class PTSWeather : uint8_t { On, Off };
+      enum class DoubleClickAction : uint8_t { None, Notifications, Timer };
 
       struct PineTimeStyle {
         Colors ColorTime = Colors::Teal;
@@ -283,6 +284,14 @@ namespace Pinetime {
         return bleRadioEnabled;
       };
 
+      DoubleClickAction GetDoubleClickAction() const {
+        return doubleClickAction;
+      };
+
+      void SetDoubleClickAction(DoubleClickAction action) {
+        doubleClickAction = action;
+      }
+
     private:
       Pinetime::Controllers::FS& fs;
 
@@ -320,6 +329,8 @@ namespace Pinetime {
        * to off (false) on every boot because we always want ble to be enabled on startup
        */
       bool bleRadioEnabled = true;
+
+      DoubleClickAction doubleClickAction = DoubleClickAction::Notifications;
 
       void LoadSettingsFromFile();
       void SaveSettingsToFile();

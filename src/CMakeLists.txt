@@ -406,6 +406,7 @@ list(APPEND SOURCE_FILES
         ## Settings
         displayapp/screens/settings/QuickSettings.cpp
         displayapp/screens/settings/Settings.cpp
+        displayapp/screens/settings/SettingDoubleClick.cpp
         displayapp/screens/settings/SettingWatchFace.cpp
         displayapp/screens/settings/SettingTimeFormat.cpp
         displayapp/screens/settings/SettingWeatherFormat.cpp
