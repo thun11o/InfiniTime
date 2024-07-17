@@ -39,6 +39,7 @@
 
 #include "displayapp/screens/settings/QuickSettings.h"
 #include "displayapp/screens/settings/Settings.h"
+#include "displayapp/screens/settings/SettingDoubleClick.h"
 #include "displayapp/screens/settings/SettingWatchFace.h"
 #include "displayapp/screens/settings/SettingTimeFormat.h"
 #include "displayapp/screens/settings/SettingWeatherFormat.h"
@@ -357,12 +358,16 @@ void DisplayApp::Refresh() {
         // Create reboot app and open it instead
         LoadNewScreen(Apps::SysInfo, DisplayApp::FullRefreshDirections::Up);
         break;
-      case Messages::ButtonDoubleClicked:
-        if (currentApp != Apps::Notifications && currentApp != Apps::NotificationsPreview) {
-          LoadNewScreen(Apps::Notifications, DisplayApp::FullRefreshDirections::Down);
+      case Messages::ButtonDoubleClicked: {
+        const auto action = settingsController.GetDoubleClickAction();
+        if (action == Controllers::Settings::DoubleClickAction::Notifications && currentApp != Apps::Notifications &&
+            currentApp != Apps::NotificationsPreview) {
+          LoadNewScreen(Apps::Notifications, FullRefreshDirections::Down);
+        } else if (action == Controllers::Settings::DoubleClickAction::Timer && currentApp != Apps::Timer) {
+          LoadNewScreen(Apps::Timer, FullRefreshDirections::None);
         }
         break;
-
+      }
       case Messages::BleFirmwareUpdateStarted:
         LoadNewScreen(Apps::FirmwareUpdate, DisplayApp::FullRefreshDirections::Down);
         break;
@@ -504,6 +509,9 @@ void DisplayApp::LoadScreen(Apps app, DisplayApp::FullRefreshDirections directio
       break;
     case Apps::SettingWeatherFormat:
       currentScreen = std::make_unique<Screens::SettingWeatherFormat>(settingsController);
+      break;
+    case Apps::SettingDoubleClick:
+      currentScreen = std::make_unique<Screens::SettingDoubleClick>(this, settingsController);
       break;
     case Apps::SettingWakeUp:
       currentScreen = std::make_unique<Screens::SettingWakeUp>(settingsController);

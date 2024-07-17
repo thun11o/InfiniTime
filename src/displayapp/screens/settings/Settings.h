@@ -40,13 +40,14 @@ namespace Pinetime {
           {Symbols::shoe, "Steps", Apps::SettingSteps},
           {Symbols::clock, "Date&Time", Apps::SettingSetDateTime},
           {Symbols::cloudSunRain, "Weather", Apps::SettingWeatherFormat},
-          {Symbols::batteryHalf, "Battery", Apps::BatteryInfo},
+          {Symbols::doubleClick, "Double Click", Apps::SettingDoubleClick},
 
+          {Symbols::batteryHalf, "Battery", Apps::BatteryInfo},
           {Symbols::clock, "Chimes", Apps::SettingChimes},
           {Symbols::tachometer, "Shake Calib.", Apps::SettingShakeThreshold},
           {Symbols::check, "Firmware", Apps::FirmwareValidation},
-          {Symbols::bluetooth, "Bluetooth", Apps::SettingBluetooth},
 
+          {Symbols::bluetooth, "Bluetooth", Apps::SettingBluetooth},
           {Symbols::list, "About", Apps::SysInfo},
 
           // {Symbols::none, "None", Apps::None},
