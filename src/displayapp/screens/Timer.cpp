@@ -2,9 +2,18 @@
 #include "displayapp/screens/Screen.h"
 #include "displayapp/screens/Symbols.h"
 #include "displayapp/InfiniTimeTheme.h"
+#include "displayapp/widgets/StatusIcons.h"
 #include <lvgl/lvgl.h>
 
 using namespace Pinetime::Applications::Screens;
+
+namespace {
+  void lv_update_task(struct _lv_task_t* task) {
+    Screen::RefreshTaskCallback(task);
+    auto* user_data = static_cast<Timer*>(task->user_data);
+    user_data->UpdateScreen();
+  }
+}
 
 static void btnEventHandler(lv_obj_t* obj, lv_event_t event) {
   auto* screen = static_cast<Timer*>(obj->user_data);
@@ -17,7 +26,16 @@ static void btnEventHandler(lv_obj_t* obj, lv_event_t event) {
   }
 }
 
-Timer::Timer(Controllers::Timer& timerController) : timer {timerController} {
+Timer::Timer(Controllers::Timer& timerController,
+             const Controllers::AlarmController& alarmController,
+             const Controllers::Battery& batteryController,
+             const Controllers::Ble& bleController)
+  : timer {timerController}, statusIcons(batteryController, bleController, alarmController) {
+  statusIcons.Create();
+
+  label_time = lv_label_create(lv_scr_act(), nullptr);
+  lv_label_set_align(label_time, LV_LABEL_ALIGN_CENTER);
+  lv_obj_align(label_time, lv_scr_act(), LV_ALIGN_IN_TOP_LEFT, 0, 0);
 
   lv_obj_t* colonLabel = lv_label_create(lv_scr_act(), nullptr);
   lv_obj_set_style_local_text_font(colonLabel, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, &jetbrains_mono_76);
@@ -117,6 +135,11 @@ void Timer::Refresh() {
       UpdateMask();
     }
   }
+}
+
+void Timer::UpdateScreen() {
+  // lv_label_set_text(label_time, dateTimeController.FormattedTime().c_str());
+  statusIcons.Update();
 }
 
 void Timer::SetTimerRunning() {
